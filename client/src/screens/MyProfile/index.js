@@ -4,17 +4,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Avatar, Card, Layout } from 'antd';
 import { FlexRow } from '../../components/Flex';
-import {
-  buildYearlyTotals,
-  totalPaidPerchild,
-  calculateAvgHoursPerMonth,
-} from './buildYearlyTotals';
+import { buildYearlyTotals } from './buildYearlyTotals';
 import { formatCurr } from '../../helpers/formatCurr';
 import { Payment } from '../../components/Payment';
 import { ME_QUERY } from '../../graphql/queries/ME_QUERY';
 import { GET_SITTES } from './graphql';
 import Graph from './profileComponents/Graph';
-import SitteeCard from './profileComponents/SitteeCard';
+import { TotalPerChildSitteeCard } from './profileComponents/SitteeCard';
 import InfoCard from './profileComponents/InfoCard';
 
 const DataSheetWrapper = styled.div`
@@ -38,12 +34,6 @@ const TopRow = styled(FlexRow)`
 
 const TitleBar = styled(FlexRow)`
   margin-bottom: 2rem;
-`;
-
-const Hours = styled.span`
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
 `;
 
 const MyProfile = () => (
@@ -92,17 +82,11 @@ const MyProfile = () => (
                   <CardWrapper>
                     {sitteData
                       && sitteData.map((sittee, i) => (
-                        <SitteeCard
-                          key={i}
-                          sitteeName={`${sittee.firstName} ${sittee.lastName}`}
-                          gender={sittee.gender}
-                        >
-                          <p>
-                            Yearly total-to-date:
-                            {' '}
-                            <Hours>{totalPaidPerchild(sittee.dates, sittee.rateAmount)}</Hours>
-                          </p>
-                        </SitteeCard>
+                        <TotalPerChildSitteeCard
+                          key={sittee.firstName}
+                          name={`${sittee.firstName} ${sittee.lastName}`}
+                          {...sittee}
+                        />
                       ))}
                   </CardWrapper>
                   <InfoCard info={30} hours />

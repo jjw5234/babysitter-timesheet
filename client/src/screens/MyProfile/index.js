@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Avatar, Card, Layout } from 'antd';
 import { FlexRow } from '../../components/Flex';
-import { buildYearlyTotals, totalPaidPerchild, calculateAvgHoursPerMonth } from './buildYearlyTotals';
+import {
+  buildYearlyTotals,
+  totalPaidPerchild,
+  calculateAvgHoursPerMonth,
+} from './buildYearlyTotals';
 import { formatCurr } from '../../helpers/formatCurr';
 import { Payment } from '../../components/Payment';
 import { ME_QUERY } from '../../graphql/queries/ME_QUERY';
@@ -74,9 +78,7 @@ const MyProfile = () => (
           <Query query={GET_SITTES}>
             {(props) => {
               const sitteData = props.data.sittes && props.data.sittes.length > 0 ? props.data.sittes : null;
-              console.log('sitteData', sitteData);
               const annualData = buildYearlyTotals(sitteData);
-              console.log('annualData', annualData);
               const annualAnnualSum = annualData.datasets[0].data.reduce(
                 (acc, curr) => acc + curr,
                 0,
@@ -88,18 +90,22 @@ const MyProfile = () => (
                     <Graph loading={props.loading} error={props.error} data={annualData} />
                   </Card>
                   <CardWrapper>
-                    {sitteData && sitteData.map((sittee, i) => (
-                      <SitteeCard key={i} sitteeName={`${sittee.firstName} ${sittee.lastName}`} gender={sittee.gender}>
-                        <p>
+                    {sitteData
+                      && sitteData.map((sittee, i) => (
+                        <SitteeCard
+                          key={i}
+                          sitteeName={`${sittee.firstName} ${sittee.lastName}`}
+                          gender={sittee.gender}
+                        >
+                          <p>
                             Yearly total-to-date:
-                          {' '}
-                          <Hours>{totalPaidPerchild(sittee.dates, sittee.rateAmount)}</Hours>
-                        </p>
-                      </SitteeCard>
-                    ))
-                    }
+                            {' '}
+                            <Hours>{totalPaidPerchild(sittee.dates, sittee.rateAmount)}</Hours>
+                          </p>
+                        </SitteeCard>
+                      ))}
                   </CardWrapper>
-                  <InfoCard info={30} hours x={console.log('calculateAvgHoursPerMonth', sitteData && calculateAvgHoursPerMonth(sitteData))} />
+                  <InfoCard info={30} hours />
                   <InfoCard info={120} hours={false} />
                 </DataSheetWrapper>
               );

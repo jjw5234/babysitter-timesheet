@@ -44,10 +44,9 @@ export const buildYearlyTotals = (data) => {
     return annualDateObject(annualData2018);
   }
 
-  const allChildDatesForYearRes = allChildDatesForYear(data);
+  const allChildDatesForYearResults = allChildDatesForYear(data);
 
-  console.log('allChildDatesForYearRes', allChildDatesForYearRes);
-  allChildDatesForYearRes.forEach((date) => {
+  allChildDatesForYearResults.forEach((date) => {
     annualData2018[date.month - 1] = annualData2018[date.month - 1] + date.paid;
   });
 
@@ -56,7 +55,6 @@ export const buildYearlyTotals = (data) => {
 
 export const totalPaidPerchild = (datesArr, rate) => {
   let total = 0;
-  // console.log('total', total);
   datesArr.forEach((date) => {
     if (date.paid) {
       total += date.paid;
@@ -69,18 +67,14 @@ export const totalPaidPerchild = (datesArr, rate) => {
 };
 
 export const calculateAvgHoursPerMonth = (data) => {
-  const res = allChildDatesForYear(data);
-  console.log('res', res);
   const hoursObj = {};
   data.forEach((date) => {
-    console.log('date', date);
     if (!(date.month in hoursObj)) {
       hoursObj[date.month] = date.hours;
     } else {
       hoursObj[date.month] += date.hours;
     }
   });
-  console.log('hoursObj', hoursObj);
 };
 // const sampleData = {
 //   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

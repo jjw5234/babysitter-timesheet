@@ -64,27 +64,42 @@ class Inner extends React.PureComponent {
     }
   }
 
-  onCellsChanged = (changes) => {
-    changes.forEach((change) => {
-      const {
-        number, year, dayOfWeek, formattedDate,
-      } = change.cell.row;
-      const { savedDateInDb } = change.cell;
+  // onCellsChanged = (changes) => {
+  //   console.log('changes', changes);
+  //   changes.forEach((change) => {
+  //     const {
+  //       number, year, dayOfWeek, formattedDate,
+  //     } = change.cell.row;
+  //     const { savedDateInDb } = change.cell;
 
-      this.props.createOrUpdateDate({
-        variables: {
-          dateId: savedDateInDb ? savedDateInDb.dateId : '',
-          dateObjectId: formattedDate,
-          childId: change.cell.childId,
-          month: parseFloat(formattedDate.slice(0, 2)),
-          day: parseFloat(number),
-          year: parseFloat(year),
-          hours: parseFloat(change.value) || 0,
-          dayOfWeek,
-        },
-      });
-    });
-  };
+  //     this.props.createOrUpdateDate({
+  //       variables: {
+  //         dateId: savedDateInDb ? savedDateInDb.dateId : '',
+  //         dateObjectId: formattedDate,
+  //         childId: change.cell.childId,
+  //         month: parseFloat(formattedDate.slice(0, 2)),
+  //         day: parseFloat(number),
+  //         year: parseFloat(year),
+  //         hours: parseFloat(change.value) || 0,
+  //         dayOfWeek,
+  //       },
+  //     });
+  //   });
+  // };
+
+  // type Date {
+  //   id: ID!
+  //   dateObjectId: String!
+  //   owner: Sitte!
+  //   month: Float!
+  //   day: Float!
+  //   year: Float!
+  //   hours: Float!
+  //   dayOfWeek: String
+  //   notes: String
+  //   paid: Float
+  //   isFixedRate: Boolean
+  // }
 
   onFixedCheckboxChange = rowData => (e) => {
     const {
@@ -96,7 +111,7 @@ class Inner extends React.PureComponent {
       savedDateInDb,
       isChecked,
     } = rowData;
-
+    console.log('rowData', rowData);
     this.props.createOrUpdateDate({
       variables: {
         dateId: savedDateInDb ? savedDateInDb.dateId : '',
@@ -156,7 +171,7 @@ class Inner extends React.PureComponent {
                 monthToView={this.state.monthToView}
                 monthlyTotal={monthlyTotal}
                 data={data}
-                onCellsChanged={this.onCellsChanged}
+                // onCellsChanged={this.onCellsChanged}
               />
             );
           })}

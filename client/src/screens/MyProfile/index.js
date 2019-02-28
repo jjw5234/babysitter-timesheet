@@ -2,50 +2,30 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Bar } from 'react-chartjs';
 import { Avatar, Card, Layout } from 'antd';
 import { FlexRow } from '../../components/Flex';
-import { buildYearlyTotals } from './buildYearlyTotals';
+import { buildYearlyTotals, totalPaidPerchild, calculateAvgHoursPerMonth } from './buildYearlyTotals';
 import { formatCurr } from '../../helpers/formatCurr';
 import { Payment } from '../../components/Payment';
 import { ME_QUERY } from '../../graphql/queries/ME_QUERY';
 import { GET_SITTES } from './graphql';
-
-const Graph = ({ loading, error, data }) => {
-  if (loading) {
-    return (<div>Loading Data...</div>);
-  }
-  if (error) {
-    return (<div>There was an error loading the data...</div>);
-  }
-  return (
-    <Bar
-      data={data}
-      height="250"
-      options={{
-        responsive: true,
-        maintainAspectRatio: false,
-        titleFontColor: 'red',
-        tooltips: {
-          callbacks: {
-            label: (toolTipItem, data) => {
-              console.log('toolTipItem, data', toolTipItem, data);
-              return 'Oh hello...';
-            },
-          },
-        },
-      }}
-    />
-  );
-};
-
+import Graph from './profileComponents/Graph';
+import SitteeCard from './profileComponents/SitteeCard';
+import InfoCard from './profileComponents/InfoCard';
 
 const DataSheetWrapper = styled.div`
   padding: 2rem 0;
 `;
 
+const CardWrapper = styled.div`
+  flex-wrap: wrap;
+  display: flex;
+  margin: 2rem 0rem 2rem 0rem;
+  justify-content: space-between;
+`;
+
 const UserName = styled.h2`
-    margin: 0 0 0 .5rem;
+  margin: 0 0 0 0.5rem;
 `;
 
 const TopRow = styled(FlexRow)`
@@ -54,6 +34,12 @@ const TopRow = styled(FlexRow)`
 
 const TitleBar = styled(FlexRow)`
   margin-bottom: 2rem;
+`;
+
+const Hours = styled.span`
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
 `;
 
 const MyProfile = () => (
@@ -86,26 +72,38 @@ const MyProfile = () => (
             </div>
           </TopRow>
           <Query query={GET_SITTES}>
-            {((props) => {
-              const sitteData = (props.data.sittes && props.data.sittes.length > 0)
-                ? props.data.sittes
-                : null;
+            {(props) => {
+              const sitteData = props.data.sittes && props.data.sittes.length > 0 ? props.data.sittes : null;
+              console.log('sitteData', sitteData);
               const annualData = buildYearlyTotals(sitteData);
-
-              const annualAnnualSum = annualData.datasets[0].data.reduce((acc, curr) => acc + curr, 0);
+              console.log('annualData', annualData);
+              const annualAnnualSum = annualData.datasets[0].data.reduce(
+                (acc, curr) => acc + curr,
+                0,
+              );
 
               return (
                 <DataSheetWrapper>
                   <Card title={`2018 Total: ${formatCurr(annualAnnualSum)}`}>
-                    <Graph
-                      loading={props.loading}
-                      error={props.error}
-                      data={annualData}
-                    />
+                    <Graph loading={props.loading} error={props.error} data={annualData} />
                   </Card>
+                  <CardWrapper>
+                    {sitteData && sitteData.map((sittee, i) => (
+                      <SitteeCard key={i} sitteeName={`${sittee.firstName} ${sittee.lastName}`} gender={sittee.gender}>
+                        <p>
+                            Yearly total-to-date:
+                          {' '}
+                          <Hours>{totalPaidPerchild(sittee.dates, sittee.rateAmount)}</Hours>
+                        </p>
+                      </SitteeCard>
+                    ))
+                    }
+                  </CardWrapper>
+                  <InfoCard info={30} hours x={console.log('calculateAvgHoursPerMonth', sitteData && calculateAvgHoursPerMonth(sitteData))} />
+                  <InfoCard info={120} hours={false} />
                 </DataSheetWrapper>
               );
-            })}
+            }}
           </Query>
         </Layout>
       );

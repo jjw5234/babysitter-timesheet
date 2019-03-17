@@ -27,6 +27,8 @@ type Mutation {
     rateType: RateType!
     gender: Gender!
   ): Sittee
+  updateSitte(data: SitteUpdateInput!, where: SitteWhereUniqueInput!): Sitte
+  deleteSitte(where: SitteWhereUniqueInput!): Sitte
   createOrUpdateDate(
     dateId: ID
     dateObjectId: String!

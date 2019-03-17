@@ -81,7 +81,6 @@ const Children = () => {
         if (error) {
           return <p>Something went wrong</p>;
         }
-        console.log('data in get sittes', data);
         return (
           <>
             <NewSitteModal onToggle={setModalVisable} visable={modalVisable} />

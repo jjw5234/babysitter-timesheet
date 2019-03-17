@@ -6,7 +6,6 @@ const Query = {
     return ctx.prisma.user({ id: userId });
   },
   dates: (parent, args, ctx) => {
-    console.log("args", args);
     return ctx.prisma.dates();
   },
   sittes: (parent, args, ctx) => {

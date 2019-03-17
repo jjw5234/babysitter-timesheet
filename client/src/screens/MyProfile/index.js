@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Avatar, Card, Layout } from 'antd';
 import { FlexRow } from '../../components/Flex';
-import { buildYearlyTotals } from './buildYearlyTotals';
+import { buildYearlyTotals, calculateAvgHrsPerMonth } from './buildYearlyTotals';
 import { formatCurr } from '../../helpers/formatCurr';
 import { Payment } from '../../components/Payment';
 import { ME_QUERY } from '../../graphql/queries/ME_QUERY';
@@ -89,7 +89,10 @@ const MyProfile = () => (
                         />
                       ))}
                   </CardWrapper>
-                  <InfoCard info={30} hours />
+                  <InfoCard
+                    info={props.data.sittes && calculateAvgHrsPerMonth(props.data.sittes)}
+                    hours
+                  />
                   <InfoCard info={120} hours={false} />
                 </DataSheetWrapper>
               );

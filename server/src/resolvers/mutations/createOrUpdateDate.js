@@ -51,36 +51,27 @@ module.exports = {
     }
   },
   createDate: async (_, args, context) => {
-    // const {
-    //   data: { dateObjectId, owner, month, day, year, hours, dayOfWeek }
-    // } = args;
-    // const {
-    //   connect: { id }
-    // } = owner;
+    const {
+      data: { dateObjectId, owner, month, day, year, hours }
+    } = args;
+    const {
+      connect: { id }
+    } = owner;
     try {
       return await context.prisma.createDate({
-        dateObjectId: "2234",
+        dateObjectId,
         owner: {
           connect: {
-            id: "cjsq881oy00600933qrtmbdyg"
+            id
           }
         },
-        month: 1,
-        day: 1,
-        year: 2011,
-        hours: 22
+        month,
+        day,
+        year,
+        hours
       });
     } catch (err) {
       throw new Error("err", err.message);
     }
   }
 };
-
-// input DateCreateInput {
-//     dateObjectId: String!
-//     owner: SitteCreateOneWithoutDatesInput!
-//     month: Float!
-//     day: Float!
-//     year: Float!
-//     hours: Float!
-//   }

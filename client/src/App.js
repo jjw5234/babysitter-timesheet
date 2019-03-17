@@ -2,17 +2,20 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ApolloProvider, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import Joyride from 'react-joyride';
 import MyProfile from './screens/MyProfile';
-import NewChild from './screens/NewChild';
+// import NewChild from './screens/NewChild';
 import LoginSignup from './screens/LoginSignup';
 import ChildInfo from './screens/ChildInfo';
 import Main from './screens/Main';
+import Welcome from './screens/Welcome';
+import Sittes from './screens/Sittes';
+import FourOFour from './screens/FourOFour';
 import { Layout } from './components/Layout';
 import { RequireSubscription } from './hocs/RequireSubscription';
+import { RedirectIfLoggedIn } from './hocs/RedirectIfLoggedIn';
 import { client } from './graphql/initApollo';
 import { Logout } from './screens/Logout/index';
-
-const NotFound = () => <h1>404</h1>;
 
 const IS_LOGGED_IN = gql`
   {
@@ -25,11 +28,13 @@ const loggedInRoutes = isLoggedIn => isLoggedIn && (
     path="/"
     component={RequireSubscription(() => (
       <Switch>
-        <Route exact path="/child/:id" component={ChildInfo} />
-        <Route exact path="/new-sitte" component={NewChild} />
-        <Route exact path="/my-profile" render={MyProfile} />
         <Route exact path="/sheet/:date" component={Main} />
+        {/* <Route exact path="/new-sitte" component={NewChild} /> */}
+        <Route exact path="/sittes" component={Sittes} />
+        <Route exact path="/sitte/:id" component={ChildInfo} />
+        <Route exact path="/account" render={MyProfile} />
         <Route exact path="/logout" component={Logout} />
+        <Route component={FourOFour} />
       </Switch>
     ))}
   />
@@ -49,23 +54,25 @@ const App = () => (
           }
 
           return (
-            <Layout isLoggedIn={data.isLoggedIn}>
-              <Switch>
+            <Switch>
+              <Route
+                exact
+                path="/"
+                component={RedirectIfLoggedIn(() => (
+                  <Welcome />
+                ))}
+              />
+              <Layout isLoggedIn={data.isLoggedIn}>
+                {loggedInRoutes(data.isLoggedIn)}
                 <Route
                   exact
-                  path="/"
-                  component={() => (
-                    <div>
-                      <h1>Welcome to sitter sheet</h1>
-                      <h2>Landing page will go here...</h2>
-                    </div>
-                  )}
+                  path="/register"
+                  component={RedirectIfLoggedIn(props => (
+                    <LoginSignup {...props} />
+                  ))}
                 />
-                <Route exact path="/register" component={LoginSignup} />
-                {loggedInRoutes(data.isLoggedIn)}
-                <Route component={NotFound} />
-              </Switch>
-            </Layout>
+              </Layout>
+            </Switch>
           );
         }}
       </Query>

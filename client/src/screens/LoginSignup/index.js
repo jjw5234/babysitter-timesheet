@@ -11,6 +11,7 @@ const SIGN_UP = 'SIGN_UP';
 
 const Title = styled.h2`
   font-weight: bold;
+  margin-bottom: 1.5rem;
 `;
 
 const SwitchFormText = styled.p`
@@ -36,7 +37,7 @@ class LoginSignupScreen extends React.PureComponent {
     // TODO: Switch out for client Query
     const token = localStorage.getItem('token');
     if (token) {
-      return <Redirect to={`/sheet/${formatDateForUrl}`} />;
+      return <Redirect to={`/sittes}`} />;
     }
 
     return (

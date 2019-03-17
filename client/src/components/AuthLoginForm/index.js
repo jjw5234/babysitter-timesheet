@@ -29,7 +29,6 @@ const FormItem = Form.Item;
 
 const StyledForm = styled(Form)`
   width: 100%;
-
   > button {
     width: 100%;
   }
@@ -88,7 +87,7 @@ class AuthLoginForm extends React.PureComponent {
 
               await window.localStorage.setItem('sid', response.data.login.token);
               mutationProps.client.writeData({ data: { isLoggedIn: true } });
-              this.props.history.push(`/sheet/${formatDateForUrl}`);
+              this.props.history.push('/sittes');
             }
           }}
         >
@@ -111,7 +110,7 @@ class AuthLoginForm extends React.PureComponent {
                 <ShowPasswordButton onClick={this.toggleShowPassword} type="button">
                   {this.state.showPassword ? 'Hide' : 'Show'}
                   {' '}
-                    Password
+                  Password
                 </ShowPasswordButton>
               </FormItem>
 
@@ -123,7 +122,7 @@ class AuthLoginForm extends React.PureComponent {
                 htmlType="submit"
                 type="primary"
               >
-                  Log In
+                Log In
               </Button>
             </StyledForm>
           )}

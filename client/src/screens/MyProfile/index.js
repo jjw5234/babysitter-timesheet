@@ -12,6 +12,7 @@ import { GET_SITTES } from './graphql';
 import Graph from './profileComponents/Graph';
 import { TotalPerChildSitteeCard } from './profileComponents/SitteeCard';
 import InfoCard from './profileComponents/InfoCard';
+import { Loader } from '../../components/Loader';
 
 const DataSheetWrapper = styled.div`
   padding: 2rem 0;
@@ -40,7 +41,7 @@ const MyProfile = () => (
   <Query query={ME_QUERY}>
     {({ data, loading, error }) => {
       if (loading) {
-        return 'Loading...';
+        return <Loader />;
       }
 
       if (error) {
@@ -67,7 +68,7 @@ const MyProfile = () => (
           </TopRow>
           <Query query={GET_SITTES}>
             {(props) => {
-              const sitteData = props.data.sittes && props.data.sittes.length > 0 ? props.data.sittes : null;
+              const sitteData = data.sittes && data.sittes.length > 0 ? data.sittes : null;
               const annualData = buildYearlyTotals(sitteData);
               const annualAnnualSum = annualData.datasets[0].data.reduce(
                 (acc, curr) => acc + curr,
@@ -77,7 +78,7 @@ const MyProfile = () => (
               return (
                 <DataSheetWrapper>
                   <Card title={`2018 Total: ${formatCurr(annualAnnualSum)}`}>
-                    <Graph loading={props.loading} error={props.error} data={annualData} />
+                    <Graph loading={loading} error={error} data={annualData} />
                   </Card>
                   <CardWrapper>
                     {sitteData
@@ -89,10 +90,7 @@ const MyProfile = () => (
                         />
                       ))}
                   </CardWrapper>
-                  <InfoCard
-                    info={props.data.sittes && calculateAvgHrsPerMonth(props.data.sittes)}
-                    hours
-                  />
+                  <InfoCard info={30} hours />
                   <InfoCard info={120} hours={false} />
                 </DataSheetWrapper>
               );
